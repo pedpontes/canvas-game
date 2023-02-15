@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo</title>
+    <style>
+        #canvas{
+            height: 400;
+            width: 400;
+            background-color: aquamarine;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas')
+        const ctx = canvas.getContext('2d')
+        var x = canvas.width/2    //começa no meio do x (player)
+        var y = canvas.height/2   //começa no meio do y (player)
+        var vel = 5
+        
+        //objeto player com propriedades do quadrado
+        var player = {
+            color: 'black',
+            altura: 10,
+            largura: 10,
+            position: {
+                coordx: x,
+                coordy: y
+            },
+            mover: {
+                cima: () => {(this.position.coordy - vel >= 0) 
+                    ? this.position.coordy -= vel 
+                    : this.position.coordy = canvas.height},
+                    
+                baixo: () => {(this.position.coordy + vel <= canvas.height) 
+                    ? this.position.coordy += vel
+                    : this.position.coordy = 0},
+
+                direita: () => {(this.position.coordx + vel <= canvas.width) 
+                    ? this.position.coordx += vel
+                    : this.position.coordx = this.position.coordx = 0 },
+
+                esquerda: () => {(this.position.coordx - vel >= 0) 
+                    ? this.position.coordx -= vel
+                    : this.position.coordx =  canvas.width}
+
+            }
+        }
+
+        //desestruturação do objeto player
+        var {color, altura, largura, position, mover} = player
+
+        //le a tecla digitada
+        document.addEventListener('keydown', event => {
+            switch(event.keyCode){
+                case 37: //esquerda
+                    mover.esquerda()
+                    break;
+                case 39: //direita
+                    mover.direita()
+                    break;
+                case 38: //cima
+                    mover.cima()
+                    break;
+                case 40: //baixo
+                    mover.baixo()
+                    break;
+            }
+        }) 
+        //desenha o player na tela
+        function draw(){
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.fillRect(position.coordx, position.coordy, largura, altura)
+                ctx.fillStyle = color
+                requestAnimationFrame(draw) //looping do programa
+        }
+        draw()  //inicio do programa
+    </script>
+</body>
+</html>
